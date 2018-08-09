@@ -1,7 +1,7 @@
 Package: amarettoTools
 Title: tools for working with AMARETTO outputs
 Description: Provide tools for working with AMARETTO outputs.
-Version: 0.0.0
+Version: 0.0.1
 Author: Vince Carey
 Suggests: knitr
 Depends: graph

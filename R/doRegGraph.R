@@ -6,7 +6,7 @@
   if (!genesOnly) stop("currently only importing gene symbols")
   read.csv(expfn, stringsAsFactors=FALSE, colClasses=colClasses, ...)
  }
- 
+
 #' produce a graph that summarizes regulator-module relationships
 #' @param dataFolder character(1) specifying location of regulators 
 #' and gene_expression CSV files by module, with filenames of form
@@ -24,16 +24,16 @@
 #' regulGBM
 #' @export
 makeRegulatorGraph = function(dataFolder=".", modpatt="^Module_") {
- csvnames = dir(dataFolder, pattern=modpatt)
+ csvnames = dir(dataFolder, pattern=modpatt, full=TRUE)
  ncsv = length(csvnames)
  if ((ncsv %% 2)!=0) warning("number of CSV files is not even")
- NMODS = ncsv/2
- modnums = seq_len(NMODS)
- modnames = paste0("Module_", modnums)
- regnames = paste0(modnames, "_regulators.csv")
- exprnames = paste0(modnames, "_gene_expression.csv")
+ regnames = grep("_regulators.csv", csvnames, value=TRUE)
+ exprnames = grep("_gene_expression.csv", csvnames, value=TRUE)
  allregs = lapply(regnames, importReg)
  regsyms = lapply(allregs, "[[", 1)
+ modnums = gsub(".*Module_(.*)_gene_expression.csv", "\\1", exprnames)
+ modnames = paste0("Module_", modnums)
+ names(allregs) = modnames
  names(regsyms) = modnames
 #
 # probe an expression file to determine colClasses
@@ -50,7 +50,7 @@ makeRegulatorGraph = function(dataFolder=".", modpatt="^Module_") {
  allregsyms = unique(unlist(regsyms))
  nn = c(allregsyms, names(regsyms)) # node names
  regul = new("graphNEL", edgemode="directed", nodes=nn)
- for (i in modnums) regul <- addEdge(allregs[[i]][,1], names(regsyms)[i], 
+ for (i in modnames) regul <- addEdge(allregs[[i]][,1], i,
      regul, weights = allregs[[i]][,2])
  for (j in modnames) {
      regul <- addNode(setdiff(allexprs[[j]][[1]], 
