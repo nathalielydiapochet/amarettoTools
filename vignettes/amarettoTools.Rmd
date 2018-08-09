@@ -1,0 +1,58 @@
+---
+title: "amarettoTools -- working with AMARETTO outputs"
+author: "Vincent J. Carey, stvjc at channing.harvard.edu"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{amarettoTools -- working with AMARETTO outputs}
+  %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::html_document:
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+# Introduction
+
+```{r setup,echo=FALSE,results="hide"}
+library(BiocStyle)
+library(amarettoTools)
+```
+
+AMARETTO is an integrative algorithm for identifying
+driver genes in multiomic cancer studies.  In this
+package we address the structure of AMARETTO results.
+
+# An illustration in glioblastoma
+
+The main result is a collection of modules of
+coexpressed and coregulated genes.  The structure
+of the collection can be captured in a graphNEL instance
+as defined in the Bioconductor graph package.
+
+```{r lklk}
+library(amarettoTools)
+data(regulGBM)
+regulGBM
+# how many modules
+length(grep("Module", nodes(regulGBM)))
+# target genes in Module_1
+adj(regulGBM, "Module_1")
+# regulators of Module_1
+inEdges("Module_1", regulGBM)
+# weights for regulators of module 1
+m1regs = inEdges("Module_1", regulGBM)[[1]]
+t(t(sapply(edgeWeights(regulGBM, m1regs), "[", "Module_1")))
+```
+
+# Conclusions
+
+This graph losslessly collects the relationship information
+in the AMARETTO run.  The expression data are propagated
+but as far as I can tell, they are just the expression
+quantifications from firehose?  So they should not be
+propagated but queried from the original source.
+
+

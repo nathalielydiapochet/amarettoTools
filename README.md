@@ -1,2 +1,1 @@
-# amarettoTools
-software for organizing AMARETTO results
+vignettes/amarettoTools.Rmd

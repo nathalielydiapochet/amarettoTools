@@ -1,0 +1,13 @@
+Package: amarettoTools
+Title: tools for working with AMARETTO outputs
+Description: Provide tools for working with AMARETTO outputs.
+Version: 0.0.0
+Author: Vince Carey
+Suggests: knitr
+Depends: graph
+Maintainer: VJ Carey <stvjc@channing.harvard.edu>
+License: Artistic-2.0
+LazyLoad: yes
+biocViews: DataRepresentation
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
